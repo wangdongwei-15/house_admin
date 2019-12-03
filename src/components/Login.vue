@@ -54,27 +54,38 @@ export default {
           ],
           password:[
             { required: true, message: '请输入用密码', trigger: 'blur' },
-            { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+            { min: 3, max: 6, message: '长度在 3 到 6 个字符', trigger: 'blur' }
           ],
       }
      
   }
+
   },
   methods:{
 
-    login(){
+     login(){
 
       // 登录预验证
-      this.$refs.loginFormRef.validate((bool,obj)=>{
+      this.$refs.loginFormRef.validate(async (bool,obj)=>{
           
           // 验证不通过
           if(!bool) return console.log('用户名或密码错误');
           
           // 验证通过
-          this.$http.get('menus').then(res=>{
-             console.log(res);
-          })
-      
+         // console.log(this.form);
+         let { data:res } = await this.$http.post('admin/login',this.form);
+
+         console.log(res);
+         // 验证不通过
+         if(res.meta.status !== 200) return this.$message.error("账号密码错误!");
+
+        // 验证通过
+
+         this.$message.success("登录成功!");
+         window.sessionStorage.setItem('token',res.data.token);
+         
+         this.$router.push('/');
+         
       });
 
      

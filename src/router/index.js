@@ -20,9 +20,27 @@ const routes = [
   
 ]
 
+
 const router = new VueRouter({
   routes
 })
+
+router.beforeEach((to,from,next)=>{
+
+    // 如果访问的是login,可以直接访问
+    // 如果访问其他路由,token是否存在, 不存在,跳转到登录页;
+   
+    if(to.path == "/login")  return  next();
+
+    let tokenStr = window.sessionStorage.getItem('token');
+    if(!tokenStr){
+        return next("/login");
+    }
+    
+    next();
+  
+})
+
 
 export default router
 
