@@ -90,10 +90,10 @@
                     <el-input v-model="form.password" type="password"></el-input>
                 </el-form-item>
             </el-form>
-            
+
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addUserDialog = false">取 消</el-button>
-                <el-button type="primary" @click="addUserDialog = false">确 定</el-button>
+                <el-button type="primary" @click="saveUser">确 定</el-button>
             </span>
         </el-dialog>
 
@@ -125,6 +125,23 @@ export default {
     },
     
     methods: {
+
+        async saveUser(){
+           
+            // 请求数据
+            let {data:res} = await this.$http.post("admin/adduser",this.form)
+            
+            // 判断是否成功
+            if(res.meta.status!==201)  return this.$message.error(res.meta.msg);
+
+            this.$message.success(res.meta.msg);
+
+            this.getUserList();
+
+            this.addUserDialog = false;
+            
+           
+        },
 
         addUser(){
             this.addUserDialog = true;
