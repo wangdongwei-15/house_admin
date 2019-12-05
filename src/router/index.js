@@ -4,6 +4,8 @@ import Home from "../components/Home.vue"
 import Login from "../components/Login.vue"
 import Users from "../components/Users.vue"
 import CreateUser from "../components/CreateUser.vue"
+import Houses from "../components/Houses.vue"
+import AddHouse from "../components/AddHouse.vue"
 
 Vue.use(VueRouter)
 
@@ -17,6 +19,8 @@ const routes = [
        {path:'/',component:Users},
        {path:'/users',component:Users},
        {path:'/add_user',component:CreateUser},
+       {path:'/houses',component:Houses},
+       {path:'/add_house',component:AddHouse}
     ]
   },
   {

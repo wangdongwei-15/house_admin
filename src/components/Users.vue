@@ -48,7 +48,7 @@
             prop="state"
             label="状态">
               <template slot-scope="scope">
-                <el-switch v-model="scope.row.state">
+                <el-switch v-model="scope.row.state" @change='updateUserState(scope.row)'>
                </el-switch>
             </template>
             </el-table-column>
@@ -56,8 +56,8 @@
            <el-table-column
             label="操作">
             <template slot-scope="scope">
-                <el-button  type="primary" icon="el-icon-edit" size="mini"></el-button>
-                <el-button  type="danger" icon="el-icon-delete" size="mini"></el-button>
+                <el-button  type="primary" icon="el-icon-edit" size="mini" @click='showEditDialog(scope.row)'></el-button>
+                <el-button  type="danger" icon="el-icon-delete" size="mini" @click='delUser(scope.row.id)'></el-button>
                 <el-button  type="warning"  icon="el-icon-setting" size="mini"></el-button>
             </template>
             </el-table-column>            
@@ -72,21 +72,23 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="total">
         </el-pagination>
-
+        
+        <!-- 添加用户 -->
         <el-dialog
+            @closed = "closeDialog"
             title="添加用户"
             :visible.sync="addUserDialog"
             width="30%"
             >
             
-            <el-form ref="form" :model="form" label-width="80px">
-                <el-form-item label="用户名">
+            <el-form ref="addUserRef" :rules="addUserRules" :model="form" label-width="80px">
+                <el-form-item label="用户名" prop='username'>
                     <el-input v-model="form.username"></el-input>
                 </el-form-item>
-                 <el-form-item label="邮箱">
+                 <el-form-item label="邮箱" prop="email">
                     <el-input v-model="form.email"></el-input>
                 </el-form-item>
-                 <el-form-item label="密码">
+                 <el-form-item label="密码" prop="password">
                     <el-input v-model="form.password" type="password"></el-input>
                 </el-form-item>
             </el-form>
@@ -94,6 +96,31 @@
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addUserDialog = false">取 消</el-button>
                 <el-button type="primary" @click="saveUser">确 定</el-button>
+            </span>
+        </el-dialog>
+
+        <!-- 编辑用户 -->
+        <el-dialog
+            title="编辑用户"
+            :visible.sync="editUserDialog"
+            width="30%"
+            >
+            
+            <el-form ref="editUserRef"  :model="editForm" label-width="80px">
+                <el-form-item label="用户名" prop='username'>
+                    <el-input v-model="editForm.username" disabled></el-input>
+                </el-form-item>
+                 <el-form-item label="邮箱" prop="email">
+                    <el-input v-model="editForm.email"></el-input>
+                </el-form-item>
+                 <el-form-item label="密码" prop="password">
+                    <el-input v-model="editForm.password" type="password"></el-input>
+                </el-form-item>
+            </el-form>
+
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="editUserDialog = false">取 消</el-button>
+                <el-button type="primary" @click="saveEditUser">确 定</el-button>
             </span>
         </el-dialog>
 
@@ -105,6 +132,19 @@
 export default {
 
     data(){
+
+        // email的合法性校验
+        var checkEmail = (rule,value,cb)=>{
+
+            const regEmail = /^\w+@\w+(\.\w+)+$/;
+            if(regEmail.test(value)){
+                return cb();
+            }
+
+            return cb(new Error('请输入合法的邮箱!'))
+            
+        }
+
         return {
             page:1,
             total:0,
@@ -112,10 +152,30 @@ export default {
             userList:[],
             words:'',
             addUserDialog:false,
+            editUserDialog:false,
             form:{
                 username:'',
                 email:'',
                 password:''
+            },
+            editForm:{
+                username:'',
+                email:'',
+                password:''
+            },
+            addUserRules:{
+                username:[
+                    {required:true,message:'请输入用户名',triger:'blur'},
+                    { min: 3, max: 8, message: '长度在 3 到 8 个字符', trigger: 'blur' }
+                ],
+                password:[
+                    {required:true,message:'请输入密码',triger:'blur'},
+                    { min: 3, max: 8, message: '长度在 3 到 8 个字符', trigger: 'blur' }
+                ],
+                email:[
+                    {required:true,message:'请输入邮箱',triger:'blur'},
+                    {validator:checkEmail,triger:'blur'}
+                ]
             }
         }
     },
@@ -126,20 +186,90 @@ export default {
     
     methods: {
 
-        async saveUser(){
-           
-            // 请求数据
-            let {data:res} = await this.$http.post("admin/adduser",this.form)
-            
-            // 判断是否成功
-            if(res.meta.status!==201)  return this.$message.error(res.meta.msg);
+        // 删除用户
+        async delUser(id){
 
-            this.$message.success(res.meta.msg);
+            //console.log(id);
+            const confirmResult = await this.$confirm("确认删除当前用户吗?",'提示',{
+                                            confirmButtonText:'确认删除',
+                                            cancelButtonText:'取消',
+                                            type:'warning'
+                                        }).catch(err=>err)
+            
+            //console.log(confirmResult);
+            if(confirmResult !== 'confirm') return this.$message.info('已取消删除');
+            
+            //console.log('执行删除');
+            let { data:res } = await this.$http.post('admin/del/'+id);
+
+            if(res.meta.status !== 200) return this.$message.error(res.meta.msg);
 
             this.getUserList();
 
-            this.addUserDialog = false;
+            this.$message.success(res.meta.msg);
             
+        },
+       
+        async saveEditUser(){
+            
+            // 校验
+
+            // 向后台api接口提交数据
+            let { data:res } = await this.$http.post('admin/edit',this.editForm);
+
+            // 用户反馈
+            if(res.meta.status !== 200) return this.$message.error(res.meta.msg);
+            this.$message.success(res.meta.msg);
+
+            // 更新页面,关闭对话框
+            this.getUserList();
+            this.editUserDialog = false;
+            
+        },
+        
+        showEditDialog(user){
+
+            this.editForm = user;
+            this.editUserDialog = true;
+
+        },
+
+        async updateUserState(user){
+           
+           let { data:res } = await this.$http.post('admin/update',user)
+           if(res.meta.status !== 200) return  this.$message.error(res.meta.msg);
+           this.$message.success(res.meta.msg);
+           
+        },
+
+        closeDialog(){
+            // 重置表单
+            this.$refs.addUserRef.resetFields();
+        },
+        
+        saveUser(){
+
+            // 表单预校验
+            this.$refs.addUserRef.validate(async bool=>{
+
+                 if(!bool)  return this.$message.error("请输入完整的用户信息!");
+                 
+                 // 请求数据
+                let {data:res} = await this.$http.post("admin/adduser",this.form)
+                
+                // 判断是否成功
+                if(res.meta.status!==201)  return this.$message.error(res.meta.msg);
+
+                this.$message.success(res.meta.msg);
+
+                this.getUserList();
+
+                this.addUserDialog = false;
+                 
+
+            })
+           
+                    
            
         },
 
