@@ -7,6 +7,7 @@
         </el-breadcrumb>
 
         <el-card>
+            
               <el-row :gutter="20">
                     <el-col :span="8">
                         <el-input placeholder="请输入内容" v-model="words" clearable @clear="clearInput">
@@ -59,7 +60,7 @@
                     <template slot-scope="scope">
                         <el-button  type="primary" icon="el-icon-edit" size="mini" ></el-button>
                         <el-button  type="danger" icon="el-icon-delete" size="mini" @click="delHouse(scope.row.id)"></el-button>
-                        <el-button  type="warning"  icon="el-icon-setting" size="mini"></el-button>
+                        <el-button  type="warning"  icon="el-icon-setting" size="mini" @click="detail(scope.row.id)"></el-button>
                     </template>
                 </el-table-column>
 
@@ -96,6 +97,14 @@ export default {
     },
     methods: {
 
+       // 房源详情
+       detail(id){
+           this.$router.push({
+               path:"/house_detail",
+               query:{ id }
+           });
+       }, 
+       
        // 删除房源
        async delHouse(id){
 
@@ -121,11 +130,16 @@ export default {
 
        // 更新房源状态
        async updateHouseState(house){
-           //console.log(house);
+
+           // 修改状态api请求
            let { data:res } = await this.$http.get('house/sale',{
                params:house
            });
-           console.log(res);
+           
+           // 交互反馈
+           if(res.meta.status !==200) return this.$message.error(res.meta.msg);
+           this.$message.success(res.meta.msg);
+           
        }, 
 
        // 发布房源
@@ -163,8 +177,6 @@ export default {
             let { data:res } = await this.$http.get(url,{
                params:{ size:this.pageSize,words:this.words }
             });
-
-            console.log(res.data);
 
             // state 1,0  转换为 true,false
             res.data.map(item=>{

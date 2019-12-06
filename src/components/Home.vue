@@ -95,7 +95,6 @@ export default {
 
       let { data:res } = await this.$http.get('menus');
       this.menuList = res.data;
-      console.log(res);
 
     },
 

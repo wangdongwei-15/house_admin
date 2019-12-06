@@ -6,6 +6,8 @@ import Users from "../components/Users.vue"
 import CreateUser from "../components/CreateUser.vue"
 import Houses from "../components/Houses.vue"
 import AddHouse from "../components/AddHouse.vue"
+import HouseDetail from "../components/HouseDetail.vue"
+import MsgList from "../components/msg/MsgList.vue"
 
 Vue.use(VueRouter)
 
@@ -20,7 +22,9 @@ const routes = [
        {path:'/users',component:Users},
        {path:'/add_user',component:CreateUser},
        {path:'/houses',component:Houses},
-       {path:'/add_house',component:AddHouse}
+       {path:'/add_house',component:AddHouse},
+       {path:'/house_detail',name:"house_detail",component:HouseDetail},
+       {path:'/msg_list',name:"msg_list",component:MsgList}
     ]
   },
   {
