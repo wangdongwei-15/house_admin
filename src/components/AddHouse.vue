@@ -62,6 +62,8 @@
 </template>
 
 <script>
+
+
 export default {
     data(){
 
@@ -79,6 +81,7 @@ export default {
 
     },
 
+
     methods:{
 
         // 将上传图片的临时文件加入到formData
@@ -89,7 +92,6 @@ export default {
         },
 
         handlePictureCardPreview(img){
-           console.log(img);
            this.dialogImageUrl = img.url;
            this.dialogVisible = true;
         },
@@ -99,23 +101,26 @@ export default {
         },
         
         // 创建房源
-         saveHouse(){
+        async saveHouse(){
 
          // 1 创建空的表单对象;
          this.formData = new FormData();
 
          // 2 图片手动上传
-         this.$refs.upload.submit();
+         await this.$refs.upload.submit();
 
           // 3 将当前页面其他表单数据加入到formData;
           this.formData.append("form",JSON.stringify(this.house));
 
-          this.$http.post('house/create',this.formData).then(res=>{
-              console.log(res);
-          });
+         let {data:res } = await this.$http.post('house/create',this.formData);
 
+          if(res.meta.status !== 200) return this.$message.error("房源发布失败");
+
+          this.$message.success(res.meta.msg);
+
+          this.$router.push('/houses');
              
-         }
+        }
     }
 }
 </script>
