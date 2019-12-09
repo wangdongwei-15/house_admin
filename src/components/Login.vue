@@ -75,7 +75,7 @@ export default {
          // console.log(this.form);
          let { data:res } = await this.$http.post('admin/login',this.form);
 
-         console.log(res);
+        
          // 验证不通过
          if(res.meta.status !== 200) return this.$message.error("账号密码错误!");
 
@@ -83,11 +83,12 @@ export default {
 
          this.$message.success("登录成功!");
          window.sessionStorage.setItem('token',res.data.token);
+         window.sessionStorage.setItem('icon',res.data.icon);
          
          this.$router.push('/');
          
       });
-
+      
      
     }
   }

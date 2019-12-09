@@ -7,6 +7,9 @@ import CreateUser from "../components/CreateUser.vue"
 import Houses from "../components/Houses.vue"
 import AddHouse from "../components/AddHouse.vue"
 import HouseDetail from "../components/HouseDetail.vue"
+import houseEdit from "../components/HouseEdit.vue"
+import ResetPassword from "../components/ResetPassword.vue"
+import SetUserIcon from "../components/SetUserIcon.vue"
 import MsgList from "../components/msg/MsgList.vue"
 
 Vue.use(VueRouter)
@@ -24,7 +27,10 @@ const routes = [
        {path:'/houses',component:Houses},
        {path:'/add_house',component:AddHouse},
        {path:'/house_detail',name:"house_detail",component:HouseDetail},
-       {path:'/msg_list',name:"msg_list",component:MsgList}
+       {path:'/house_edit',name:"house_edit",component:houseEdit},
+       {path:'/msg_list',name:"msg_list",component:MsgList},
+       {path:'/set_usericon',component:SetUserIcon},
+       {path:'/reset_password',name:"reset_password",component:ResetPassword }
     ]
   },
   {

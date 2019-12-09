@@ -7,7 +7,11 @@
             <div class="logo"><img src='../assets/img/house_logo_3.png'> </div>
             <span>今启房源后台管理</span>
          </div>
-          <el-button type="info" @click='logout'  size="mini">退出</el-button>
+         <div class="logout">
+             <el-avatar size="medium" :src="user_icon"></el-avatar>
+             <el-button type="info" @click='logout' size="mini" >退出</el-button>
+         </div>
+        
       </el-header>
 
       <el-container>
@@ -70,13 +74,16 @@ export default {
            "108":"el-icon-s-home",
            "112":"el-icon-s-comment",
            "120":"el-icon-s-check"
-        }
+        },
+        user_icon:''
      }
   },
 
   created(){
      this.getMenuList();
      this.activePath = sessionStorage.getItem('activePath') ? sessionStorage.getItem('activePath'):'/users';
+     this.user_icon = sessionStorage.getItem('icon');
+
   },
 
   methods: {
@@ -118,6 +125,14 @@ export default {
   display:flex;
   justify-content:space-between;
   align-items:center;
+  .logout{
+      height: 60px;
+      align-items: center;
+      display: flex;
+  }
+  .el-avatar {
+    margin-right: 10px;
+  }
   .left{
      display:flex;
      color:#ddd;

@@ -58,7 +58,7 @@
                   <el-table-column
                     label="操作">
                     <template slot-scope="scope">
-                        <el-button  type="primary" icon="el-icon-edit" size="mini" ></el-button>
+                        <el-button  type="primary" icon="el-icon-edit" size="mini" @click="editHouse(scope.row.id)"></el-button>
                         <el-button  type="danger" icon="el-icon-delete" size="mini" @click="delHouse(scope.row.id)"></el-button>
                         <el-button  type="warning"  icon="el-icon-setting" size="mini" @click="detail(scope.row.id)"></el-button>
                     </template>
@@ -97,6 +97,16 @@ export default {
     },
     methods: {
 
+        // 编辑房源
+        editHouse(id){
+
+            this.$router.push({
+               path:"/house_edit",
+               query:{ id }
+           })
+
+        },
+
        // 房源详情
        detail(id){
            this.$router.push({
@@ -125,7 +135,7 @@ export default {
            if(res.meta.status !== 200) return this.$message.error(res.meta.msg);
            this.$message.success(res.meta.msg);
            this.getHouseList();
-
+         
        }, 
 
        // 更新房源状态
