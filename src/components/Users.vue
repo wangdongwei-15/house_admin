@@ -182,6 +182,9 @@ export default {
 
     created() {
         this.getUserList();
+        console.log('hello');
+        console.log('world');
+        console.log('hello');
     },
     
     methods: {
@@ -300,6 +303,10 @@ export default {
         },
 
         async getUserList(){
+
+            console.log('hello');
+            console.log('world');
+            console.log('hello');
 
             // 请求的url地址
             let url = 'admin/users?page='+this.page;
