@@ -5,14 +5,13 @@ import router from './router'
 import  "./assets/css/global.css"
 import  "./assets/fonts/iconfont.css"
 
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-Vue.use(ElementUI);
+// import ElementUI from 'element-ui';
+// import 'element-ui/lib/theme-chalk/index.css';
+// Vue.use(ElementUI);
 
 import axios from 'axios';
 Vue.prototype.$http = axios;
 
-//axios.defaults.baseURL = 'http://www.xyz.com/api';
 
 //导入进度条插件
 import NProgress from 'nprogress';

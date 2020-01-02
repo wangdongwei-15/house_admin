@@ -7,7 +7,7 @@ module.exports = {
       proxy: 'http://127.0.0.1/jinqi_api/public/index.php/api/'
     },
 
-    // 链式配置
+    // 链式配置 
     chainWebpack:config=>{
 
       //发布模式
@@ -29,7 +29,8 @@ module.exports = {
         })
         
       })
-
+     
+      
       //开发模式
       config.when(process.env.NODE_ENV === 'development',config=>{
         

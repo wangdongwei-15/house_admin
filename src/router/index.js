@@ -1,16 +1,38 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from "../components/Home.vue"
-import Login from "../components/Login.vue"
-import Users from "../components/Users.vue"
-import CreateUser from "../components/CreateUser.vue"
-import Houses from "../components/Houses.vue"
-import AddHouse from "../components/AddHouse.vue"
-import HouseDetail from "../components/HouseDetail.vue"
-import houseEdit from "../components/HouseEdit.vue"
-import ResetPassword from "../components/ResetPassword.vue"
-import SetUserIcon from "../components/SetUserIcon.vue"
-import MsgList from "../components/msg/MsgList.vue"
+
+
+
+// import Home from "../components/Home.vue"
+// import Login from "../components/Login.vue"
+const Login = () => import(/* webpackChunkName: "login_home" */ '../components/Login.vue')
+const Home = () => import(/* webpackChunkName: "login_home" */ '../components/Home.vue')
+
+
+// import Users from "../components/Users.vue"
+// import CreateUser from "../components/CreateUser.vue"
+// import ResetPassword from "../components/ResetPassword.vue"
+// import SetUserIcon from "../components/SetUserIcon.vue"
+
+const Users = () => import(/* webpackChunkName: "user_group" */ '../components/Users.vue')
+const CreateUser = () => import(/* webpackChunkName: "user_group" */ '../components/CreateUser.vue')
+const  ResetPassword = () => import(/* webpackChunkName: "user_group" */ '../components/ResetPassword.vue')
+const SetUserIcon = () => import(/* webpackChunkName: "user_group" */ '../components/SetUserIcon.vue')
+
+
+// import Houses from "../components/Houses.vue"
+// import AddHouse from "../components/AddHouse.vue"
+// import HouseDetail from "../components/HouseDetail.vue"
+// import houseEdit from "../components/HouseEdit.vue"
+
+const Houses = () => import(/* webpackChunkName: "user_group" */ '../components/Houses.vue')
+const AddHouse = () => import(/* webpackChunkName: "user_group" */ '../components/AddHouse.vue')
+const HouseDetail = () => import(/* webpackChunkName: "user_group" */ '../components/HouseDetail.vue')
+const houseEdit = () => import(/* webpackChunkName: "user_group" */ '../components/HouseEdit.vue')
+
+//import MsgList from "../components/msg/MsgList.vue"
+const MsgList = () => import(/* webpackChunkName: "user_group" */ '../components/msg/MsgList.vue')
+
 
 Vue.use(VueRouter)
 
